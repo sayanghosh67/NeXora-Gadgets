@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ──────────────────────────────────────────────────────── */
 :root {
   color-scheme: dark;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif;
 }
 
 * {
@@ -12,52 +14,158 @@
 body {
   margin: 0;
   background: #020617;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ─── Custom scrollbar ───────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.35);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.65);
+}
+
+/* ─── Text selection ─────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: #fff;
+}
+
+/* ─── Glassmorphism card ─────────────────────────────────────────────────── */
 .glass-card {
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.58));
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.35);
-  transition: all 220ms ease;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.82),
+    rgba(15, 23, 42, 0.58)
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 20px 44px rgba(2, 6, 23, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  transform: translateY(-2px) scale(1.01);
-  border-color: rgba(96, 165, 250, 0.45);
+  transform: translateY(-3px) scale(1.006);
+  border-color: rgba(96, 165, 250, 0.38);
   box-shadow:
-    0 20px 42px rgba(2, 6, 23, 0.48),
-    0 0 0 1px rgba(96, 165, 250, 0.2),
-    0 0 25px rgba(59, 130, 246, 0.25);
+    0 28px 52px rgba(2, 6, 23, 0.58),
+    0 0 0 1px rgba(96, 165, 250, 0.16),
+    0 0 36px rgba(59, 130, 246, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
+/* ─── Premium button ─────────────────────────────────────────────────────── */
 .btn-premium {
-  border: 1px solid rgba(96, 165, 250, 0.45);
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.88), rgba(56, 189, 248, 0.85));
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.38);
-  transition: all 180ms ease;
+  position: relative;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.92),
+    rgba(6, 182, 212, 0.88)
+  );
+  box-shadow:
+    0 6px 22px rgba(37, 99, 235, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.btn-premium::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent);
+  border-radius: inherit;
 }
 
 .btn-premium:hover {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 1), rgba(6, 182, 212, 1));
   box-shadow:
-    0 12px 32px rgba(56, 189, 248, 0.28),
-    0 0 30px rgba(56, 189, 248, 0.34);
+    0 10px 32px rgba(6, 182, 212, 0.3),
+    0 0 44px rgba(59, 130, 246, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }
 
 .btn-premium:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
+/* ─── Premium input ──────────────────────────────────────────────────────── */
 .input-premium {
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, 0.72);
   color: white;
   outline: none;
-  transition: all 180ms ease;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-premium::placeholder {
+  color: rgba(148, 163, 184, 0.4);
 }
 
 .input-premium:focus {
   border-color: rgba(96, 165, 250, 0.65);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: rgba(15, 23, 42, 0.88);
+}
+
+/* ─── Select dropdown fix ────────────────────────────────────────────────── */
+select.input-premium > option {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* ─── Gradient text utility ──────────────────────────────────────────────── */
+.text-gradient-blue {
+  background: linear-gradient(135deg, #60a5fa, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Glow pulse animation ───────────────────────────────────────────────── */
+.glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  from {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  }
+  to {
+    box-shadow: 0 0 48px rgba(59, 130, 246, 0.45);
+  }
+}
+
+/* ─── Shimmer skeleton ───────────────────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.05) 0%,
+    rgba(148, 163, 184, 0.12) 50%,
+    rgba(148, 163, 184, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
 }
