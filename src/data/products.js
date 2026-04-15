@@ -186,7 +186,19 @@ export const products = [
     description:
       'Premium extended mouse pad with a smooth micro-weave surface optimised for both optical and laser sensors, a heavy-duty non-slip rubber base, and reinforced stitched edges for lasting durability.',
     image:
-      'https://images.pexels.com/photos/4792009/pexels-photo-4792009.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      'https://images.pexels.com/photos/4792007/pexels-photo-4792007.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    id: 'test-product',
+    name: 'Test Product',
+    price: 1,
+    category: 'Tech Accessories',
+    image: 'https://placehold.co/1200x900/111111/ff7a00?text=Test+Product',
+    description: 'A special test product for verification.',
+    shortDescription: 'Validation product.',
+    rating: 5.0,
+    stock: 99,
+    badge: 'New',
   },
 ]
 

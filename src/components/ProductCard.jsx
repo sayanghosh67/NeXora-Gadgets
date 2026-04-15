@@ -1,164 +1,157 @@
 import { useState } from 'react'
 import { motion as Motion, AnimatePresence } from 'framer-motion'
-import { Star, ShoppingCart, Check } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { BrandName, formatBrandText } from './BrandName.jsx'
 import { useCart } from '../hooks/useCart.js'
 import { formatINR } from '../utils/currency.js'
 import { FALLBACK_PRODUCT_IMAGE } from '../utils/media.js'
 
+// Minimal, warm badge styling
 const BADGE_STYLES = {
-  'Top Rated': 'bg-amber-500/20 text-amber-300 border-amber-400/30',
-  New: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
-  Popular: 'bg-blue-500/20 text-blue-300 border-blue-400/30',
-  'Best Value': 'bg-violet-500/20 text-violet-300 border-violet-400/30',
-  Limited: 'bg-rose-500/20 text-rose-300 border-rose-400/30',
-  Sale: 'bg-orange-500/20 text-orange-300 border-orange-400/30',
+  'Top Rated': 'bg-white/10 text-white border-white/20',
+  New: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  Popular: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  'Best Value': 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+  Limited: 'bg-red-500/10 text-red-500 border-red-500/20',
+  Sale: 'bg-orange-600/10 text-orange-500 border-orange-600/20',
 }
 
-export const ProductCard = ({ product, index }) => {
+export const ProductCard = ({ product }) => {
   const { addToCart } = useCart()
   const [added, setAdded] = useState(false)
 
-  const handleAddToCart = () => {
+  // Item variants for the staggered grid animation in HomePage
+  // Apple style: slow fade, slight upward motion, and cinematic blur
+  const itemVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 45,
+      filter: 'blur(15px)',
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      scale: 1,
+      transition: { 
+        duration: 0.85, 
+        ease: [0.22, 1, 0.36, 1] 
+      },
+    },
+  }
+
+  const handleAddToCart = (e) => {
+    e.preventDefault() // prevent navigating to product detail
     addToCart(product)
     setAdded(true)
-    setTimeout(() => setAdded(false), 1500)
+    setTimeout(() => setAdded(false), 2000)
   }
 
   return (
-    <Motion.article
-      initial={{ opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: index * 0.07,
-        duration: 0.42,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
-      className="group glass-card flex flex-col overflow-hidden rounded-2xl"
+    <Motion.div 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.2 }}
+      variants={itemVariants}
     >
-      {/* ─── Image ─────────────────────────────────────────────────────── */}
       <Link
         to={`/products/${product.id}`}
-        className="relative block overflow-hidden"
-        tabIndex={-1}
-        aria-hidden
+        className="group relative flex h-full flex-col overflow-hidden rounded-3xl glass-card text-left outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50"
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          onError={(e) => {
-            e.currentTarget.src = FALLBACK_PRODUCT_IMAGE
-          }}
-          className="h-52 w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
-          loading="lazy"
-        />
+        {/* ─── Image Container ───────────────────────────────────────────── */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#111] border-b border-white/5">
+          <img
+            src={product.image}
+            alt={product.name}
+            onError={(e) => {
+              e.currentTarget.src = FALLBACK_PRODUCT_IMAGE
+            }}
+            className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.03] group-hover:brightness-105"
+            loading="lazy"
+          />
 
-        {/* Hover gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          {/* Fade overlay on hover */}
+          <div className="absolute inset-0 bg-black/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {/* Category badge (top-left) */}
-        {product.badge && (
-          <span
-            className={`absolute left-3 top-3 rounded-lg border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm ${
-              BADGE_STYLES[product.badge] ?? 'bg-blue-500/20 text-blue-300 border-blue-400/30'
-            }`}
-          >
-            {product.badge}
-          </span>
-        )}
-
-        {/* Low-stock warning (top-right) */}
-        {product.stock <= 8 && (
-          <span className="absolute right-3 top-3 rounded-lg border border-rose-400/30 bg-rose-500/20 px-2.5 py-1 text-[11px] font-semibold text-rose-300 backdrop-blur-sm">
-            Only {product.stock} left
-          </span>
-        )}
-      </Link>
-
-      {/* ─── Content ───────────────────────────────────────────────────── */}
-      <div className="flex flex-1 flex-col justify-between space-y-4 p-4">
-        <div className="space-y-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-blue-300/65">
-            {product.category}
-          </p>
-
-          <Link to={`/products/${product.id}`}>
-            <h3 className="text-base font-semibold leading-snug text-white transition-colors duration-200 group-hover:text-blue-200">
-              {product.name}
-            </h3>
-          </Link>
-
-          <p className="line-clamp-1 text-sm text-slate-400">
-            {product.shortDescription}
-          </p>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1.5">
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`size-3 ${
-                    star <= Math.round(product.rating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'fill-slate-700 text-slate-700'
+          {/* Subtle badges */}
+          <div className="absolute top-4 inset-x-4 flex items-start justify-between pointer-events-none">
+            <div className="flex flex-col gap-2">
+              {product.badge && (
+                <span
+                  className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-medium tracking-widest uppercase backdrop-blur-md ${
+                    BADGE_STYLES[product.badge] ?? 'bg-white/10 text-white border-white/20'
                   }`}
-                />
-              ))}
-            </div>
-            <span className="text-xs font-medium text-slate-300">
-              {product.rating.toFixed(1)}
-            </span>
-            <span className="text-xs text-slate-600">/ 5.0</span>
-          </div>
-        </div>
-
-        {/* Price + Add-to-cart */}
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xl font-bold text-blue-100">
-              {formatINR(product.price)}
-            </p>
-            <p className="text-xs text-slate-500">incl. GST</p>
-          </div>
-
-          <Motion.button
-            id={`add-to-cart-${product.id}`}
-            whileTap={{ scale: 0.92 }}
-            whileHover={{ scale: 1.06 }}
-            onClick={handleAddToCart}
-            className={`inline-flex min-w-[96px] items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold text-white transition-all duration-300 ${
-              added
-                ? 'border border-emerald-400/40 bg-emerald-500/20 text-emerald-300 shadow-[0_0_18px_rgba(52,211,153,0.25)]'
-                : 'btn-premium'
-            }`}
-          >
-            <AnimatePresence mode="wait">
-              {added ? (
-                <Motion.span
-                  key="done"
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  className="flex items-center gap-1.5"
                 >
-                  <Check className="size-3.5" /> Added
-                </Motion.span>
-              ) : (
-                <Motion.span
-                  key="add"
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  className="flex items-center gap-1.5"
-                >
-                  <ShoppingCart className="size-3.5" /> Add
-                </Motion.span>
+                  {product.badge}
+                </span>
               )}
-            </AnimatePresence>
-          </Motion.button>
+            </div>
+          </div>
         </div>
-      </div>
-    </Motion.article>
+
+        {/* ─── Product Info ──────────────────────────────────────────────── */}
+        <div className="flex flex-1 flex-col justify-between p-6">
+          <div className="space-y-1.5">
+            <h3 className="text-lg font-medium tracking-tight text-white transition-colors duration-300">
+              {formatBrandText(product.name)}
+            </h3>
+            <p className="line-clamp-2 text-sm leading-relaxed text-neutral-400">
+              {formatBrandText(product.shortDescription)}
+            </p>
+          </div>
+
+          {/* Price & Action */}
+          <div className="mt-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xl font-medium tracking-tight text-white">
+                {formatINR(product.price)}
+              </p>
+            </div>
+
+            <Motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={handleAddToCart}
+              aria-label={`Add ${product.name} to cart`}
+              className={`relative flex size-10 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+                added
+                  ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+                  : 'bg-white/10 border border-white/10 text-white hover:bg-orange-500 hover:text-white hover:border-orange-500 shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]'
+              }`}
+            >
+              <AnimatePresence mode="wait">
+                {added ? (
+                  <Motion.svg
+                    key="check"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-4"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </Motion.svg>
+                ) : (
+                  <Motion.div
+                    key="plus"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                  >
+                    <Plus className="size-5" />
+                  </Motion.div>
+                )}
+              </AnimatePresence>
+            </Motion.button>
+          </div>
+        </div>
+      </Link>
+    </Motion.div>
   )
 }

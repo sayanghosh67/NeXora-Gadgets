@@ -2,6 +2,7 @@ import { motion as Motion } from 'framer-motion'
 import { ArrowLeft, Star, ShoppingCart, Package, Shield, Zap } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { useState } from 'react'
+import { BrandName, formatBrandText } from '../components/BrandName.jsx'
 import { useCart } from '../hooks/useCart.js'
 import { products } from '../data/products.js'
 import { formatINR } from '../utils/currency.js'
@@ -30,7 +31,7 @@ export const ProductDetailsPage = () => {
     return (
       <div className="glass-card rounded-2xl p-12 text-center">
         <p className="mb-2 text-2xl font-semibold text-white">Product not found</p>
-        <p className="mb-6 text-slate-400">The product you're looking for doesn't exist.</p>
+        <p className="mb-6 text-neutral-400">The product you're looking for doesn't exist.</p>
         <Link
           className="btn-premium inline-flex rounded-xl px-5 py-2.5 text-sm font-semibold text-white"
           to="/"
@@ -62,7 +63,7 @@ export const ProductDetailsPage = () => {
         >
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-300 hover:text-blue-200"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-orange-400 hover:text-orange-300"
           >
             <ArrowLeft className="size-4" />
             All products
@@ -82,13 +83,13 @@ export const ProductDetailsPage = () => {
           {/* Features list */}
           {features.length > 0 && (
             <div className="glass-card rounded-2xl p-4">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
                 Key features
               </p>
               <ul className="grid grid-cols-2 gap-2">
                 {features.map((feat) => (
-                  <li key={feat} className="flex items-center gap-2 text-sm text-slate-300">
-                    <Zap className="size-3.5 shrink-0 text-blue-400" />
+                  <li key={feat} className="flex items-center gap-2 text-sm text-neutral-300">
+                    <Zap className="size-3.5 shrink-0 text-orange-400" />
                     {feat}
                   </li>
                 ))}
@@ -106,11 +107,11 @@ export const ProductDetailsPage = () => {
         >
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-lg border border-blue-400/25 bg-blue-500/12 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
+              <span className="rounded-lg border border-orange-500/25 bg-orange-500/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-orange-400">
                 {product.category}
               </span>
               {product.badge && (
-                <span className="rounded-lg border border-emerald-400/30 bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300">
+                <span className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-white">
                   {product.badge}
                 </span>
               )}
@@ -120,11 +121,11 @@ export const ProductDetailsPage = () => {
               className="text-3xl font-bold leading-tight text-white sm:text-4xl"
               style={{ fontFamily: 'var(--font-display, Inter), sans-serif' }}
             >
-              {product.name}
+              {formatBrandText(product.name)}
             </h2>
 
-            <p className="text-base leading-relaxed text-slate-300">
-              {product.description}
+            <p className="text-base leading-relaxed text-neutral-300">
+              {formatBrandText(product.description)}
             </p>
           </div>
 
@@ -137,7 +138,7 @@ export const ProductDetailsPage = () => {
                   className={`size-4 ${
                     s <= Math.round(product.rating)
                       ? 'fill-amber-400 text-amber-400'
-                      : 'fill-slate-700 text-slate-700'
+                      : 'fill-neutral-700 text-neutral-700'
                   }`}
                 />
               ))}
@@ -145,16 +146,16 @@ export const ProductDetailsPage = () => {
             <span className="text-sm font-semibold text-amber-300">
               {product.rating.toFixed(1)}
             </span>
-            <span className="text-xs text-slate-500">/ 5.0</span>
+            <span className="text-xs text-neutral-500">/ 5.0</span>
           </div>
 
           {/* Purchase card */}
           <div className="glass-card rounded-2xl p-5 space-y-5">
             <div className="flex items-end gap-3">
-              <p className="text-4xl font-bold text-blue-100 sm:text-5xl">
+              <p className="text-4xl font-bold text-white sm:text-5xl">
                 {formatINR(product.price)}
               </p>
-              <span className="mb-1 text-sm text-slate-400">incl. GST</span>
+              <span className="mb-1 text-sm text-neutral-400">incl. GST</span>
             </div>
 
             {/* Stock indicator */}
@@ -162,11 +163,11 @@ export const ProductDetailsPage = () => {
               <div
                 className={`size-2 rounded-full ${
                   product.stock > 10
-                    ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]'
-                    : 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+                    ? 'bg-orange-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]'
+                    : 'bg-red-500 shadow-[0_0_8px_rgba(220,38,38,0.6)]'
                 }`}
               />
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-neutral-300">
                 {product.stock > 10
                   ? `${product.stock} units in stock`
                   : `Only ${product.stock} units left — order soon`}
@@ -179,7 +180,7 @@ export const ProductDetailsPage = () => {
               onClick={handleAddToCart}
               className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold text-white transition-all duration-300 ${
                 added
-                  ? 'border border-emerald-400/40 bg-emerald-500/20 text-emerald-300 shadow-[0_0_24px_rgba(52,211,153,0.3)]'
+                  ? 'border border-orange-500/40 bg-orange-500/20 text-orange-300 shadow-[0_0_24px_rgba(245,158,11,0.3)]'
                   : 'btn-premium'
               }`}
             >
@@ -188,12 +189,12 @@ export const ProductDetailsPage = () => {
             </Motion.button>
 
             <div className="grid grid-cols-2 gap-2">
-              <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-slate-900/40 px-3 py-2.5 text-xs text-slate-400">
-                <Shield className="size-3.5 text-blue-400 shrink-0" />
+              <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-3 py-2.5 text-xs text-neutral-400">
+                <Shield className="size-3.5 text-orange-400 shrink-0" />
                 2-year warranty
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-slate-900/40 px-3 py-2.5 text-xs text-slate-400">
-                <Package className="size-3.5 text-blue-400 shrink-0" />
+              <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-3 py-2.5 text-xs text-neutral-400">
+                <Package className="size-3.5 text-orange-400 shrink-0" />
                 Free returns
               </div>
             </div>
@@ -224,11 +225,11 @@ export const ProductDetailsPage = () => {
                   className="size-16 shrink-0 rounded-xl object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-white group-hover:text-blue-200">
-                    {rel.name}
+                  <p className="truncate text-sm font-semibold text-white group-hover:text-orange-300">
+                    {formatBrandText(rel.name)}
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-400 line-clamp-1">{rel.shortDescription}</p>
-                  <p className="mt-1.5 text-sm font-bold text-blue-300">{formatINR(rel.price)}</p>
+                  <p className="mt-0.5 text-xs text-neutral-400 line-clamp-1">{rel.shortDescription}</p>
+                  <p className="mt-1.5 text-sm font-bold text-white">{formatINR(rel.price)}</p>
                 </div>
               </Link>
             ))}
@@ -238,3 +239,4 @@ export const ProductDetailsPage = () => {
     </section>
   )
 }
+

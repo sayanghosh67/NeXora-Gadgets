@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion as Motion } from 'framer-motion'
 import { Mail, Smartphone, X, Loader2 } from 'lucide-react'
+import { BrandName } from './BrandName.jsx'
 import { useAuth } from '../hooks/useAuth.js'
 import { sendEmailOTP, sendSMSOTP, verifySMSOTP } from '../utils/otpService.js'
 
@@ -115,13 +116,15 @@ export const AuthModal = ({ open, onClose }) => {
             <div className="glass-card rounded-2xl p-5 sm:p-6">
               <div className="mb-5 flex items-start justify-between">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-blue-200/70">NeXora Account</p>
+                  <p className="text-xs uppercase tracking-[0.24em] text-neutral-400">
+                    <BrandName className="!text-[inherit] font-medium" /> Account
+                  </p>
                   <h3 className="text-2xl font-semibold text-white">Login / Signup</h3>
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-lg border border-white/10 p-2 text-slate-300 hover:border-blue-300/40 hover:text-blue-200"
+                  className="rounded-lg border border-white/10 p-2 text-neutral-400 hover:border-orange-500/40 hover:text-orange-400"
                 >
                   <X className="size-4" />
                 </button>
@@ -134,7 +137,7 @@ export const AuthModal = ({ open, onClose }) => {
                   onClick={() => setMethod('phone')}
                   className={`inline-flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm transition-all ${
                     method === 'phone'
-                      ? 'border-blue-300/70 bg-blue-500/20 text-blue-100'
+                      ? 'border-orange-500/70 bg-orange-500/20 text-orange-100'
                       : 'border-white/10 text-slate-300 opacity-60'
                   }`}
                 >
@@ -147,7 +150,7 @@ export const AuthModal = ({ open, onClose }) => {
                   onClick={() => setMethod('email')}
                   className={`inline-flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm transition-all ${
                     method === 'email'
-                      ? 'border-blue-300/70 bg-blue-500/20 text-blue-100'
+                      ? 'border-orange-500/70 bg-orange-500/20 text-orange-100'
                       : 'border-white/10 text-slate-300 opacity-60'
                   }`}
                 >
@@ -179,7 +182,7 @@ export const AuthModal = ({ open, onClose }) => {
                 <div className="space-y-4">
                   <div className="text-center">
                     <p className="text-sm text-slate-400">
-                      OTP sent to <span className="text-blue-200">{contact}</span>
+                      OTP sent to <span className="text-orange-400">{contact}</span>
                     </p>
                   </div>
                   <input
@@ -203,14 +206,14 @@ export const AuthModal = ({ open, onClose }) => {
                     type="button"
                     onClick={handleSendOtp}
                     disabled={isLoading}
-                    className="w-full rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slate-300 hover:border-blue-300/35 disabled:opacity-50"
+                    className="w-full rounded-xl border border-white/10 px-4 py-2.5 text-sm text-neutral-400 hover:border-orange-500/35 disabled:opacity-50"
                   >
                     Resend OTP
                   </button>
                   <button
                     type="button"
                     onClick={() => setStep('contact')}
-                    className="w-full text-xs text-blue-300/60 hover:text-blue-300"
+                    className="w-full text-xs text-orange-400/60 hover:text-orange-400"
                   >
                     Change {method === 'phone' ? 'phone number' : 'email'}
                   </button>

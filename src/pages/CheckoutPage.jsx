@@ -3,6 +3,7 @@ import { motion as Motion } from 'framer-motion'
 import { CheckCircle2, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
+import { BrandName, formatBrandText } from '../components/BrandName.jsx'
 import { useCart } from '../hooks/useCart.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { formatINR } from '../utils/currency.js'
@@ -10,7 +11,11 @@ import { formatINR } from '../utils/currency.js'
 const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || 'test'
 const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || ''
 const merchantUpiId = '8509067386@upi'
-const merchantName = 'NeXora Gadgets'
+const merchantName = (
+  <span className="text-orange-500 font-bold">
+    Ne<span className="text-red-600">X</span>ora Gadgets
+  </span>
+)
 
 export const CheckoutPage = () => {
   const { items, price, clearCart } = useCart()
@@ -32,7 +37,8 @@ export const CheckoutPage = () => {
   }
 
   const hasItems = items.length > 0
-  const shipping = hasItems ? 199 : 0
+  const containsTestProduct = items.some((item) => item.id === 'test-product')
+  const shipping = hasItems && !containsTestProduct ? 199 : 0
   const finalAmount = price + shipping
   const finalAmountText = useMemo(() => formatINR(finalAmount), [finalAmount])
   const transactionRef = useMemo(
@@ -117,7 +123,7 @@ export const CheckoutPage = () => {
           <CheckCircle2 className="mx-auto mb-4 size-14 text-emerald-300" />
           <p className="mb-2 text-3xl font-semibold text-white">Payment Successful</p>
           <p className="mb-5 text-slate-300">Your order is confirmed and being prepared for dispatch.</p>
-          <p className="mb-6 rounded-lg border border-white/10 bg-slate-900/45 p-3 text-sm text-blue-200">
+          <p className="mb-6 rounded-lg border border-white/10 bg-white/5 p-3 text-sm text-neutral-300">
             Transaction ID: {transactionId}
           </p>
           <Link to="/" className="btn-premium inline-flex rounded-xl px-5 py-2.5 text-sm font-semibold text-white">
@@ -132,7 +138,7 @@ export const CheckoutPage = () => {
     <section className="grid gap-7 lg:grid-cols-[1fr_0.85fr]">
       <Motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         <div>
-          <p className="mb-2 text-xs uppercase tracking-[0.26em] text-blue-200/70">Secure Checkout</p>
+          <p className="mb-2 text-xs uppercase tracking-[0.26em] text-neutral-400">Secure Checkout</p>
           <h2 className="text-3xl font-semibold text-white sm:text-4xl">Shipping and payment details</h2>
         </div>
 
@@ -184,8 +190,8 @@ export const CheckoutPage = () => {
               onClick={() => setPaymentMethod('upi-qr')}
               className={`rounded-xl border px-3 py-2 text-sm ${
                 paymentMethod === 'upi-qr'
-                  ? 'border-blue-300/70 bg-blue-500/20 text-blue-100'
-                  : 'border-white/10 text-slate-300 hover:border-blue-300/35'
+                  ? 'border-orange-500/70 bg-orange-500/20 text-orange-100'
+                  : 'border-white/10 text-slate-300 hover:border-orange-300/35'
               }`}
             >
               UPI QR
@@ -195,7 +201,7 @@ export const CheckoutPage = () => {
               onClick={() => setPaymentMethod('paypal')}
               className={`rounded-xl border px-3 py-2 text-sm ${
                 paymentMethod === 'paypal'
-                  ? 'border-blue-300/70 bg-blue-500/20 text-blue-100'
+                  ? 'border-orange-500/70 bg-orange-500/20 text-orange-100'
                   : 'border-white/10 text-slate-300 hover:border-blue-300/35'
               }`}
             >
@@ -208,13 +214,13 @@ export const CheckoutPage = () => {
                 <div className="rounded-2xl border border-white/10 bg-slate-900/45 p-4">
                   <p className="mb-2 text-sm text-slate-200">Scan with BHIM, PhonePe, GPay, Paytm, or any UPI app</p>
                   <p className="text-xs text-slate-400">
-                    UPI ID: <span className="font-medium text-blue-200">{merchantUpiId}</span>
+                    UPI ID: <span className="font-medium text-orange-400">{merchantUpiId}</span>
                   </p>
                 </div>
-                <div className="mx-auto w-fit rounded-2xl border border-blue-300/20 bg-slate-900/60 p-3">
+                <div className="mx-auto w-fit rounded-2xl border border-orange-500/20 bg-white/5 p-3">
                   <img src={upiQrImageUrl} alt="UPI payment QR" className="size-56 rounded-xl" />
                 </div>
-                <p className="text-center text-sm font-medium text-blue-100">Pay {finalAmountText}</p>
+                <p className="text-center text-sm font-medium text-white">Pay {finalAmountText}</p>
                 <button
                   type="button"
                   onClick={() => {
@@ -230,7 +236,7 @@ export const CheckoutPage = () => {
                   type="button"
                   onClick={handleUPIPayment}
                   disabled={!isRazorpayReady || !razorpayKey}
-                  className="w-full rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slate-200 hover:border-blue-300/40 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slate-200 hover:border-orange-500/40 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Or Pay via Razorpay Popup
                 </button>
@@ -238,7 +244,7 @@ export const CheckoutPage = () => {
             ) : (
               <PayPalScriptProvider options={{ clientId: paypalClientId, currency: 'INR', intent: 'capture' }}>
                 <PayPalButtons
-                  style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' }}
+                  style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' }}
                   createOrder={(data, actions) =>
                     actions.order.create({
                       purchase_units: [
@@ -277,9 +283,9 @@ export const CheckoutPage = () => {
             items.map((item) => (
               <div key={item.id} className="flex items-center justify-between gap-3 text-sm">
                 <p className="truncate text-slate-200">
-                  {item.name} <span className="text-slate-400">x{item.quantity}</span>
+                  {formatBrandText(item.name)} <span className="text-slate-400">x{item.quantity}</span>
                 </p>
-                <p className="font-medium text-blue-100">{formatINR(item.price * item.quantity)}</p>
+                <p className="font-medium text-white">{formatINR(item.price * item.quantity)}</p>
               </div>
             ))
           )}
@@ -302,7 +308,7 @@ export const CheckoutPage = () => {
 
         <Link
           to="/"
-          className="mt-5 inline-flex rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-200 hover:border-blue-300/40 hover:text-blue-200"
+          className="mt-5 inline-flex rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-200 hover:border-orange-500/40 hover:text-orange-300"
         >
           Back to products
         </Link>

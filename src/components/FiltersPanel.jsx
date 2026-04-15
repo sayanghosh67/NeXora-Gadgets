@@ -40,7 +40,7 @@ export const FiltersPanel = ({
               <SlidersHorizontal className="size-3.5" />
               Max price
             </span>
-            <span className="rounded-lg border border-blue-400/25 bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-300">
+            <span className="rounded-lg border border-orange-500/25 bg-orange-500/10 px-2.5 py-0.5 text-xs font-medium text-orange-400">
               {formatINR(maxPrice)}
             </span>
           </div>
@@ -54,7 +54,7 @@ export const FiltersPanel = ({
               step="500"
               value={maxPrice}
               onChange={(e) => onMaxPrice(Number(e.target.value))}
-              className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-blue-900/50 accent-blue-400"
+              className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-orange-900/50 accent-orange-500"
               style={{
                 background: `linear-gradient(to right, rgba(59,130,246,0.7) 0%, rgba(59,130,246,0.7) ${((maxPrice - 2000) / (70000 - 2000)) * 100}%, rgba(15,23,42,0.6) ${((maxPrice - 2000) / (70000 - 2000)) * 100}%, rgba(15,23,42,0.6) 100%)`
               }}
@@ -78,8 +78,8 @@ export const FiltersPanel = ({
               onClick={() => onCategory(item)}
               className={`rounded-xl border px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
                 category === item
-                  ? 'border-blue-400/60 bg-blue-500/20 text-blue-200 shadow-[0_0_18px_rgba(59,130,246,0.22)]'
-                  : 'border-white/8 text-slate-400 hover:border-blue-400/32 hover:bg-blue-500/8 hover:text-slate-200'
+                  ? 'border-orange-500/60 bg-orange-500/20 text-orange-200 shadow-[0_0_18px_rgba(245,158,11,0.22)]'
+                  : 'border-white/8 text-neutral-400 hover:border-orange-500/30 hover:bg-orange-500/10 hover:text-white'
               }`}
             >
               {item}
